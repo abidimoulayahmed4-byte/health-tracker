@@ -1,139 +1,45 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Health Tracker بالعربي</title>
+  <title>برنامج متابعة الصحة</title>
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 1rem; background: #f5f5f5; }
-    h1 { color: #38761d; text-align: center; }
-    .day { background: #fff; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; }
-    .meal { margin: 0.5rem 0; }
-    button { margin-top: 0.5rem; padding: 0.5rem 1rem; background: #38761d; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #6aa84f; }
-    .calendar { display: flex; flex-direction: column; }
-    @media (max-width: 600px) {
-      .day { font-size: 14px; }
-      button { font-size: 14px; }
+    body { 
+      font-family: sans-serif; 
+      padding: 2rem; 
+      background: #f5f5f5; 
+      direction: rtl; 
     }
+    h1 { color: #38761d; text-align: center; }
+    .day-card { 
+      background: #fff; 
+      padding: 20px; 
+      margin: 20px auto; 
+      max-width: 500px; 
+      border-radius: 10px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+    }
+    button { 
+      margin: 5px; 
+      padding: 8px 12px; 
+      background: #38761d; 
+      color: #fff; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    button:disabled {
+      background: #ccc; 
+      cursor: not-allowed;
+    }
+    ul { padding-right: 20px; }
   </style>
 </head>
 <body>
-  <h1>برنامج متابعة الصحة</h1>
   <div id="root"></div>
-
-  <script type="text/babel">
-    const { useState } = React;
-
-    const weekData = [
-      { 
-        day: "اليوم 1",
-        meals: [
-          { name: "فطور: بيض + خبز كامل + خيار", quantity: "100g + 50g + 50g", calories: 250 },
-          { name: "غداء: دجاج مشوي + سلطة + أرز بني", quantity: "150g + 100g + 100g", calories: 400 },
-          { name: "عشاء: شوربة خضر", quantity: "200g", calories: 120 }
-        ],
-        drink: "كراوية",
-        exercise: "مشي 30 دقيقة",
-        goal: "تنظيم الدورة وتحسين الهضم"
-      },
-      { 
-        day: "اليوم 2",
-        meals: [
-          { name: "فطور: زبادي + بذور الشيا", quantity: "150g + 20g", calories: 180 },
-          { name: "غداء: سمك + خضر مطبوخة", quantity: "150g + 100g", calories: 350 },
-          { name: "عشاء: سلطة + تونة", quantity: "100g + 100g", calories: 220 }
-        ],
-        drink: "قرفة",
-        exercise: "تمارين تمدد 15 دقيقة",
-        goal: "تحسين التوازن الهرموني"
-      },
-      { 
-        day: "اليوم 3",
-        meals: [
-          { name: "فطور: بيض + أفوكادو", quantity: "100g + 50g", calories: 260 },
-          { name: "غداء: لحم + سلطة + بطاطا", quantity: "150g + 100g + 100g", calories: 450 },
-          { name: "عشاء: زبادي", quantity: "150g", calories: 100 }
-        ],
-        drink: "كراوية",
-        exercise: "يوغا 20 دقيقة",
-        goal: "زيادة النشاط وحرق الدهون"
-      },
-      { 
-        day: "اليوم 4",
-        meals: [
-          { name: "فطور: زبادي + مكسرات", quantity: "150g + 30g", calories: 200 },
-          { name: "غداء: دجاج + خضر + أرز بني", quantity: "150g + 100g + 100g", calories: 400 },
-          { name: "عشاء: شوربة", quantity: "200g", calories: 120 }
-        ],
-        drink: "قرفة",
-        exercise: "مشي سريع 30 دقيقة",
-        goal: "تقوية المناعة وتحسين الهضم"
-      },
-      { 
-        day: "اليوم 5",
-        meals: [
-          { name: "فطور: بيض + خبز كامل", quantity: "100g + 50g", calories: 200 },
-          { name: "غداء: سمك + سلطة", quantity: "150g + 100g", calories: 350 },
-          { name: "عشاء: سلطة + بيض", quantity: "100g + 100g", calories: 220 }
-        ],
-        drink: "كراوية",
-        exercise: "تمارين مقاومة 20 دقيقة",
-        goal: "حرق الدهون وزيادة القوة"
-      },
-      { 
-        day: "اليوم 6",
-        meals: [
-          { name: "فطور: زبادي + شيا", quantity: "150g + 20g", calories: 180 },
-          { name: "غداء: لحم + خضر", quantity: "150g + 100g", calories: 350 },
-          { name: "عشاء: شوربة", quantity: "200g", calories: 120 }
-        ],
-        drink: "قرفة",
-        exercise: "مشي 30 دقيقة",
-        goal: "تحسين الدورة الدموية"
-      },
-      { 
-        day: "اليوم 7",
-        meals: [
-          { name: "فطور: بيض + أفوكادو", quantity: "100g + 50g", calories: 260 },
-          { name: "غداء: دجاج + سلطة", quantity: "150g + 100g", calories: 400 },
-          { name: "عشاء: خفيف (زبادي أو فاكهة)", quantity: "150g", calories: 100 }
-        ],
-        drink: "كراوية",
-        exercise: "استراحة خفيفة",
-        goal: "راحة وتجديد الطاقة"
-      },
-    ];
-
-    function App() {
-      const [dayIndex, setDayIndex] = useState(0);
-
-      return (
-        <div className="calendar">
-          <div className="day">
-            <h2>{weekData[dayIndex].day}</h2>
-            {weekData[dayIndex].meals.map((meal, idx) => (
-              <div className="meal" key={idx}>
-                <strong>{meal.name}</strong> - الكمية: {meal.quantity} - السعرات: {meal.calories} kcal
-              </div>
-            ))}
-            <p>مشروب اليوم: {weekData[dayIndex].drink}</p>
-            <p>تمرين: {weekData[dayIndex].exercise}</p>
-            <p>هدف اليوم: {weekData[dayIndex].goal}</p>
-          </div>
-          <div>
-            <button onClick={() => setDayIndex((dayIndex + 1) % 7)}>اليوم التالي</button>
-            <button onClick={() => setDayIndex((dayIndex + 6) % 7)}>اليوم السابق</button>
-          </div>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+  <script type="text/babel" src="app.js"></script>
 </body>
-  <div id="root"></div>
 </html>
